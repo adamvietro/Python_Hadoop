@@ -1,0 +1,20 @@
+hadoop jar C:\Hadoop\hadoop-2.9.1\share\hadoop\tools\lib\hadoop-streaming-2.9.1.jar -help
+
+hdfs dfs -mkdir /home
+hdfs dfs -mkdir /home/PoE
+
+hdfs dfs -copyFromLocal C:\Users\Vinny-Lap\Dropbox\Python\PoE-Hadoop_00\MapReduce\raw_data.txt /home/PoE
+
+hdfs dfs -ls /home/PoE
+
+cd C:\Users\Vinny-Lap\Dropbox\Python\PoE-Hadoop_00\MapReduce 
+hadoop jar C:\Hadoop\hadoop-2.9.1\share\hadoop\tools\lib\hadoop-streaming-2.9.1.jar -D  mapred.output.key.comparator.class=org.apache.hadoop.mapred.lib.KeyFieldBasedComparator -D mapred.text.key.comparator.options=-r -mapper "python mapper.py" -reducer "python reducer.py" -input /home/PoE/* -output /home/PoE/Output -file mapper.py, reducer.py
+
+
+
+hdfs dfs -get /home/PoE/Output/part-00000  C:\Users\Vinny-Lap\Dropbox\Python\PoE-Hadoop_00\MapReduce\data
+
+hdfs dfs -rm /home/PoE/raw_data.txt
+hdfs dfs -rm /home/PoE/Output/_SUCCESS
+hdfs dfs -rm /home/PoE/Output/part-00000
+hdfs dfs -rmdir /home/PoE/Output
